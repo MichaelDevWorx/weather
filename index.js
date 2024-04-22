@@ -41,13 +41,17 @@ async function getWeatherData(city) {
 function displayWeatherInfo(data) {
     
     console.log(data);
+    
 
     //object/array destructuring
     const {
         name: city,
         main: {temp, humidity, feels_like}, 
-        weather: [{description, id}]} = data;
+        weather: [{description, id}],
+        sys: {country}} = data;
 
+    
+    console.log(country);
     card.textContent = "";
     card.style.display = "flex";
 
@@ -57,11 +61,22 @@ function displayWeatherInfo(data) {
     const humidityDisplay = document.createElement("p");
     const descDisplay = document.createElement("p");
     const weatherEmoji = document.createElement("p");
-    let feelsLike = (feels_like*(9/5)-459.67).toFixed(0);
+    let convertedTemp = "";
+    let convertedFeelsTemp = "";
+    
+    if ( country === "US" ) {
+        convertedTemp = `${(temp*(9/5)-459.67).toFixed(0)} ° F `;
+        convertedFeelsTemp = `${(feels_like*(9/5)-459.67).toFixed(0)} ° F `
+    }
+    else {
+        convertedTemp = `${(temp-273.15).toFixed(0)} ° C`;
+        convertedFeelsTemp = `${(feels_like-273.15).toFixed(0)} ° C`
+    }    
+
 
     cityDisplay.textContent = city;
-    tempDisplay.textContent = `${(temp*(9/5)-459.67).toFixed(0)}° F`;
-    feelsLikeDisplay.textContent = `Feels like: ${feelsLike}° F ${feelsEmoji(feelsLike)}`
+    tempDisplay.textContent = `${convertedTemp}`;
+    feelsLikeDisplay.textContent = `Feels like: ${convertedFeelsTemp} ${feelsEmoji(convertedFeelsTemp)}`
     humidityDisplay.textContent = `Humidity: ${humidity}%`;
     descDisplay.textContent = description;
     weatherEmoji.textContent = getWeatherEmoji(id);
@@ -82,15 +97,15 @@ function displayWeatherInfo(data) {
 
 }
 
-function feelsEmoji(feels_temp) {
+function feelsEmoji(convertedFeelsTemp) {
     switch(true) {
-        case (feels_temp > 89):
+        case (convertedFeelsTemp > 89):
             return "🥵";
-        case (feels_temp <= 89 && feels_temp >= 70 ):
+        case (convertedFeelsTemp <= 89 && convertedFeelsTemp >= 70 ):
             return "😎";
-        case (feels_temp <=69  && feels_temp >= 50 ):
+        case (convertedFeelsTemp <=69  && convertedFeelsTemp >= 50 ):
                 return "😁";
-        case (feels_temp <= 49):
+        case (convertedFeelsTemp <= 49):
             return "🥶";
         default: 
             return "😶‍🌫️";
