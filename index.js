@@ -52,9 +52,11 @@ function displayWeatherInfo(data) {
 
     
     console.log(country);
+
     card.textContent = "";
     card.style.display = "flex";
 
+    
     const cityDisplay = document.createElement("h1");
     const tempDisplay = document.createElement("p");
     const feelsLikeDisplay = document.createElement("p");
@@ -76,7 +78,7 @@ function displayWeatherInfo(data) {
 
     cityDisplay.textContent = city;
     tempDisplay.textContent = `${convertedTemp}`;
-    feelsLikeDisplay.textContent = `Feels like: ${convertedFeelsTemp} ${feelsEmoji(convertedFeelsTemp)}`
+    feelsLikeDisplay.textContent = `Feels like: ${convertedFeelsTemp} ${feelsEmoji(convertedFeelsTemp, country)}`
     humidityDisplay.textContent = `Humidity: ${humidity}%`;
     descDisplay.textContent = description;
     weatherEmoji.textContent = getWeatherEmoji(id);
@@ -97,18 +99,39 @@ function displayWeatherInfo(data) {
 
 }
 
-function feelsEmoji(convertedFeelsTemp) {
-    switch(true) {
-        case (convertedFeelsTemp > 89):
-            return "🥵";
-        case (convertedFeelsTemp <= 89 && convertedFeelsTemp >= 70 ):
-            return "😎";
-        case (convertedFeelsTemp <=69  && convertedFeelsTemp >= 50 ):
-                return "😁";
-        case (convertedFeelsTemp <= 49):
-            return "🥶";
-        default: 
-            return "😶‍🌫️";
+function feelsEmoji(convertedFeelsTemp, country) {
+    
+    let feelsNoChars = convertedFeelsTemp.replace(/\D/g, '');
+    const unitCountry = country;
+
+    if (unitCountry === "US") {
+
+        switch(true) {
+            case (feelsNoChars > 89):
+                return "🥵";
+            case (feelsNoChars <= 89 && feelsNoChars >= 70 ):
+                return "😎";
+            case (feelsNoChars <=69  && feelsNoChars >= 50 ):
+                    return "😁";
+            case (feelsNoChars <= 49):
+                return "🥶";
+            default: 
+                return "😶‍🌫️";
+        }
+    }
+    else {
+        switch(true) {
+            case (feelsNoChars > 32):
+                return "🥵";
+            case (feelsNoChars <= 32 && feelsNoChars >= 23 ):
+                return "😎";
+            case (feelsNoChars <=22  && feelsNoChars >= 11 ):
+                    return "😁";
+            case (feelsNoChars <= 10):
+                return "🥶";
+            default: 
+                return "😶‍🌫️";
+        }
     }
 }
 
