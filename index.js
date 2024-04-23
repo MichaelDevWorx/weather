@@ -2,7 +2,7 @@ const weatherForm = document.querySelector(".weatherForm");
 const cityInput = document.querySelector(".cityInput");
 const card = document.querySelector(".card");
 const apiKey = "ce74408af791bdd9a0f017fb14a46fad";
-
+const IPapiKey = "1dc012c219ae4f9a878ea0a334deb5a1";
 
 weatherForm.addEventListener("submit", async event => {
 
@@ -176,3 +176,37 @@ function displayError(message) {
     card.appendChild(errorDisplay);
 
 };
+
+async function gatherIP () {
+
+    const ipdata = await getUserIP();
+    console.log(ipdata);
+    console.log(ipdata.city);
+    displayIP(ipdata);
+
+};
+
+async function getUserIP() {
+    
+    const apiUrl = `https://ipgeolocation.abstractapi.com/v1/?api_key=${IPapiKey}`;
+    const response = await fetch(apiUrl);
+
+    if (!response.ok){
+        throw new Error("Could not fetch weather data.");
+    }
+    
+    return await response.json(); //return object in json-like format 
+
+};
+
+function displayIP(data) {
+
+    const locationDisplay = document.createElement("p");
+    const ipDisplay = document.createElement("p");
+
+    locationDisplay.textContent  = `${data.city}, ${data.region}`
+    ipDisplay.textContent = `IP address: ${data.ip_address}`
+
+    cityInput.value = `${data.city}, ${data.region_iso_code}, ${data.country_code}`;
+   
+}
