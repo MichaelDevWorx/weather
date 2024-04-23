@@ -3,11 +3,14 @@ const cityInput = document.querySelector(".cityInput");
 const card = document.querySelector(".card");
 const apiKey = "ce74408af791bdd9a0f017fb14a46fad";
 
+
 weatherForm.addEventListener("submit", async event => {
 
     //stops it from the default behavior of refreshing the page;
     event.preventDefault(); 
     
+
+
     const city = cityInput.value; //store input of city in city variable
 
     if (city) {
@@ -36,6 +39,9 @@ async function getWeatherData(city) {
         
     }
     return await response.json(); //return object in json-like format 
+
+    
+
 }
 
 function displayWeatherInfo(data) {
